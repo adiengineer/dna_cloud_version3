@@ -1,0 +1,41 @@
+Chunk Architecture in New Improved Golay code application: 
+
+We limit the amount of data in bytes to store per chunk to 9 bytes as this seems the most optimal and less error prone number. 
+
+Regular Payload Chunk:The chunk where actual data of file, filename, extension is stored and has used all 9 bytes. 
+		      Size is neccessarily 9 bytes for a chunk to be called Regular.
+
+Irregular Payload Chunk: The chunk whose data has size < 9 bytes.
+		         Maximum possible Irregular chunks=1(file extension chunk) + 1(filename chunk) + 1(fileSize chunk) + 1(GOD chunk)=4
+
+
+#
+#	Chunk architecture of Regular/Irregular chunk: 
+#					 1 guard trit
+#					 at max 99 trits worth 9 bytes of data, exactly 99 trits in a regular chunk 
+#					 trits required for fileId depends on number of files and is assumed to be known for supporting multi file access
+#					 trits required for chunkId depends from file to file
+#					 1 trit for parity
+#	      				 1 guard trit
+		      
+		      
+
+
+
+GOD Chunk: The chunk where data regarding filesize and number of chunks required for storing filename is stored.
+	   This should be the very first chunk to be read at the time of decoding.
+	   Its length is always bigger than the regular payload chunk. 
+#
+#	Chunk architecture of GOD chunk: 
+#					 guard trit
+#					 11 trits (1 byte) to get number of file name chunks
+#					 2 trits to get maximum number of bytes which is required to store file size. (range =0 to 8, but interpretation 1 to 9) 
+#					 next trits ( no of bytes for filesize * 11 * x, x is the minimum no such that god chunk size becomes greater than regular chunk size) 
+#					 fileid trits
+#					 parity trit
+#					 guard trit
+
+
+
+
+
